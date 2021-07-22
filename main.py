@@ -78,7 +78,17 @@ class Video(Resource):
         db.session.commit()    
         return {f"Video {video_id} Deleted successfully": 204}
 
+
+class Videos(Resource):
+    @marshal_with(resource_fields)
+    def get(self):
+        results = VideoModel.query.all()
+        if not results:
+            return abort(404, message="Could not find any videos")
+        return results
+
 api.add_resource(Video, "/video/<int:video_id>")
+api.add_resource(Videos, "/videos")
 
 if __name__ == "__main__":
     app.run(debug=True)
